@@ -1,24 +1,24 @@
 <template>
     <div id="login">
-        <i-form ref="formLogin" :model="formLogin" :rules="formLoginRules"  class="card-box">
+        <i-form ref="adminLogin" :model="adminLogin"   class="card-box">
             <Form-item class="formLogin-title">
                 <h3>实验室维修系统后台登录</h3>
             </Form-item>
 
             <Form-item prop="username">
-                <i-input size="large" type="text" v-model="formLogin.username" placeholder="用户名">
+                <i-input size="large" type="text" v-model="adminLogin.username" placeholder="用户名">
                     <Icon type="md-person" slot="prepend"/>
                 </i-input>
             </Form-item>
             <Form-item prop="password">
-                <i-input size="large"  type="password" v-model="formLogin.password" placeholder="密码">
+                <i-input size="large"  type="password" v-model="adminLogin.password" placeholder="密码">
                     <Icon type="md-lock" slot="prepend"></Icon>
                 </i-input>
             </Form-item>
             <Form-item class="login-no-bottom">
                 <Row>
                     <Col span="18" offset="3">
-                        <Button type="primary" :loading="loading"  @click="handleSubmit('formLogin')" long>
+                        <Button type="primary" :loading="loading"  @click="adminLoginValidation" long>
                             <span v-if="!loading">登&nbsp;&nbsp; 录</span>
                             <span v-else>登录中...</span>
                         </Button>
@@ -33,7 +33,7 @@
     export default {
         data () {
             return {
-                formLogin: {
+                adminLogin: {
                     username: '',
                     password: '',
                 },
@@ -41,7 +41,30 @@
             }
         },
         methods: {
-            handleSubmit() {
+            adminLoginValidation() {
+                this.loading = true;
+                if(this.adminLogin.username == '' || this.adminLogin.password == ''){
+                    this.$Message.warning("输入不能为空");
+                    this.loading = false;
+                    return;
+                }
+
+                this.$axios({
+                    method:'post',
+                    url:'/api/login/adminValidation',
+                    data:{
+                        adminLogin:this.adminLogin
+                    }
+                }).then(response=>{
+                    if(response.data.success){
+                        sessionStorage.setItem("adminLoginStatus","1");
+                        this.$router.push("/adminHome");
+                        this.$Message.success("登录成功");
+                    }else{
+                        this.$Message.error(response.data.errMsg);
+                        this.loading = false;
+                    }
+                })
             },
         },
         created() {

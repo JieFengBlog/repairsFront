@@ -6,28 +6,24 @@
                 :loading="modalLoading"
                 @on-ok="asyncOK">
             <Form  ref="ItemData" :model="ItemData" :label-width="80">
-                <FormItem label="学号/编号" prop="number">
-                    <Input v-model="ItemData.number" ></Input>
+                <FormItem label="标题" prop="title">
+                    <Input v-model="ItemData.title" ></Input>
                 </FormItem>
-                <FormItem label="姓名" prop="name">
+                <FormItem label="发布人" prop="name">
                     <Input v-model="ItemData.name" ></Input>
                 </FormItem>
-                <FormItem label="用户名" prop="login.username">
-                    <Input v-model="ItemData.login.username" ></Input>
-                </FormItem>
-                <FormItem label="密码" prop="login.password">
-                    <Input v-model="ItemData.login.password" ></Input>
+                <FormItem label="公告内容" prop="content">
+                    <Input v-model="ItemData.content" type="textarea"></Input>
                 </FormItem>
             </Form>
         </Modal>
 
-        <Button type="success" style="margin-bottom: 10px;" @click="addStudent">添加实验室管理员</Button>
+        <Button type="success" style="margin-bottom: 10px;" @click="addStudent">添加公告信息</Button>
 
 
         <Table :data="managerData" :columns="studentColumns" stripe border :loading="loading">
-            <template slot-scope="{row}" slot="login">
-                <strong>用户名:  </strong>{{row.login.username}}&nbsp;&nbsp;&nbsp;&nbsp;
-                <strong>密码:  </strong>{{row.login.password}}
+            <template slot-scope="{row}" slot="createTime">
+                    {{new Date(row.createTime).toLocaleString()}}
             </template>
             <template slot-scope="{ row, index }" slot="action">
                 <Button type="primary" size="small" style="margin-right: 5px" @click="edit(row)">修改</Button>
@@ -56,31 +52,35 @@
                 managerData: [],
                 ItemData:{
                     id:'',
-                    number:'',
+                    title:'',
                     name:'',
-                    login:{
-                        id:'',
-                        username:'',
-                        password:'',
-                    }
+                    content:'',
+                    createTime:''
 
                 },
                 studentColumns: [
                     {
-                        title:'编号',
-                        key:'number',
+                        title:'标题',
+                        key:'title',
                         align:'center',
-                        width: 350
+                        width: 250
                     },
                     {
-                        title:'姓名',
+                        title:'发送人',
                         key:'name',
                         align:'center',
-                        width: 450
+                        width: 150
                     },
                     {
-                        title: '登录信息',
-                        slot: 'login',
+                        title: '内容',
+                        key: 'content',
+                        align: 'center',
+                        width: 800
+                    },
+                    {
+                        title: '发送时间',
+                        slot: 'createTime',
+                        width: 250,
                         align: 'center'
                     },
                     {
@@ -96,11 +96,11 @@
                 this.loading = true;
                 this.$axios({
                     method:'get',
-                    url:'/api/managerPeople/getAllManagerPeople',
+                    url:'/api/notice/getAllNotice',
                 }).then(response =>{
                     if(response.data.success){
                         setTimeout(() =>{
-                            this.managerData = response.data.ManagerPeopleList;
+                            this.managerData = response.data.NoticeList;
                             this.loading = false;
                         },1000)
                     }else{
@@ -112,10 +112,10 @@
                 setTimeout(() => {
                     this.$axios({
                         method:'post',
-                        url:'/api/managerPeople/insertOrEditManagerPeople',
+                        url:'/api/notice/insertOrEditNotice',
                         data:{
                             formType:this.formType,
-                            ManagerPeopleInfo:this.ItemData
+                            NoticeInfo:this.ItemData
                         }
                     }).then(response =>{
                         if(response.data.success)
@@ -131,24 +131,22 @@
             addStudent(){
                 console.log(this.$refs['ItemData'].resetFields());
                 this.modalVisible = true;
-                this.formTitle = '添加实验室管理员';
+                this.formTitle = '添加公告信息';
                 this.formType = 0;
             },
             edit(row){
                 this.modalVisible = true;
-                this.formTitle = '编辑信息';
+                this.formTitle = '编辑公告信息';
                 this.formType = 1;
 
                 this.ItemData.id = row.id;
-                this.ItemData.number = row.number;
+                this.ItemData.title = row.title;
                 this.ItemData.name = row.name;
-                this.ItemData.login.id = row.login.id;
-                this.ItemData.login.username = row.login.username;
-                this.ItemData.login.password = row.login.password;
+                this.ItemData.content = row.content;
             },
             remove(row){
                 console.log(row)
-                this.$axios.get("/api/managerPeople/deleteManagerPeopleById/" + row.id + '/' + row.login.id).then(
+                this.$axios.get("/api/notice/deleteNoticeById/" + row.id).then(
                     response=>{
                         if(response.data){
                             this.getAllStudent();

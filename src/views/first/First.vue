@@ -34,7 +34,34 @@
                             <Button type="primary" style="float:right; margin-right: 20px;" @click="showMore">查看更多</Button>
                         </Row>
                     </TabPane>
-                    <TabPane label="系统公告" name="name2">标签二的内容</TabPane>
+                    <TabPane label="系统公告" name="name2" >
+                        <Layout style="position: absolute;height: 100%; width: 100%;">
+                            <Sider hide-trigger width="200" style="background: #fff; overflow:auto">
+
+                                <div style="position: absolute; height: 100%; width: 200px;">
+                                    <h2 style="margin-bottom: 20px;">公告列表</h2>
+                                    <Card dis-hover  v-for="(item,index) in list1 " :key="index" style="text-align: center;cursor: pointer; width: 100%; margin-top: 5px;">
+                                        <a style="color: #000;" @click="showSystemNotice(item)">{{item.title}}</a>
+                                    </Card>
+                                </div>
+                            </Sider>
+                            <Layout>
+                                <Header style="text-align: center;"><h2>{{title}}</h2></Header>
+                                <div style=" background: #fff;">
+                                    <h5 style="margin-left: 340px;">{{noticeName}}</h5>
+                                </div>
+                                <Divider style="background:#FFF; margin:0px 0px"/>
+                                <Content style="background: #fff;">
+                                    <div style="height: 100px; width: 450px;  margin: 35px auto;">
+                                            {{content}}
+                                    </div>
+                                    <div style="float: right; margin-right: 100px;">
+                                        {{createTime}}
+                                    </div>
+                                </Content>
+                            </Layout>
+                        </Layout>
+                    </TabPane>
                 </Tabs>
             </Card>
         </Col>
@@ -81,6 +108,10 @@
         name: "First",
         data(){
             return{
+                title:'',
+                content:'',
+                noticeName:'',
+                createTime:'',
                 imgName: '',
                 visible: false,
                 uploadList: [],
@@ -94,6 +125,7 @@
                 spinShow:false,
                 uploadList: [],
                 firstTable: [],
+                list1: [],
                 repairTable:{
                     address:'',
                     desc:'',
@@ -104,10 +136,23 @@
             this.spinShow = true;
             this.getFirstTable();
             this.spinShow = false;
-            console.log("first" + sessionStorage.getItem("number"))
+            this.getFirstSystemNotice();
         },
         methods:{
-
+            showSystemNotice(item){
+                this.title = item.title;
+                this.content = item.content;
+                this.createTime = new Date(item.createTime).toLocaleString();
+                this.noticeName = item.name;
+            },
+            getFirstSystemNotice(){
+                this.$axios.get("/api/notice/getAllNotice")
+                    .then(response=>{
+                        if(response.data.success){
+                            this.list1 = response.data.NoticeList;
+                        }
+                    })
+            },
             getFirstTable(){
                 this.$axios.get("/api/first/getFirstTable")
                     .then(response=>{
@@ -167,7 +212,7 @@
     }
 </script>
 
-<style scoped>
+<style>
 .repair-order-title span{
     font-size: 15px;
     margin:10px ;
@@ -211,4 +256,8 @@
     cursor: pointer;
     margin: 0 2px;
 }
+
+    #first .ivu-card-body{
+        padding: 5px;
+    }
 </style>

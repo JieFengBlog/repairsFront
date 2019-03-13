@@ -101,6 +101,10 @@
             }
         },
         created(){
+            if(!sessionStorage.getItem("adminLoginStatus")){
+                this.$router.push("/adminLogin");
+                return;
+            }
             this.breadList = this.$router.history.current.matched;
         },
         computed: {
@@ -121,14 +125,12 @@
             }
         },
         methods: {
-            passwordConsistent(rule, value, callback){
-
-            },
             collapsedSider () {
                 this.$refs.side1.toggleCollapse();
             },
             adminCenter(name){
                 if(name == "0"){
+                    this.sessionStorage.removeItem("adminLoginStatus");
                     this.$router.push("/adminLogin");
                 }else{
                     this.modal1 = true;
