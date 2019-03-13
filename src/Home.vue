@@ -1,87 +1,122 @@
 <template>
-    <div class="layout">
-        <Layout :style="{minHeight: '100vh'}">
-            <Sider collapsible :collapsed-width="78" v-model="isCollapsed">
-                <Menu active-name="1-2" theme="dark" width="auto" :class="menuitemClasses">
-                    <MenuItem name="1-1">
-                        <Icon type="ios-navigate"></Icon>
-                        <span>Option 1</span>
-                    </MenuItem>
-                    <MenuItem name="1-2">
-                        <Icon type="ios-arrow-dropleft-circle" />
-                        <span>Option 2</span>
-                    </MenuItem>
-                    <MenuItem name="1-3">
-                        <Icon type="ios-chatbubbles" />
-                        <span>Option 3</span>
-                    </MenuItem>
-                </Menu>
-            </Sider>
-            <Layout>
-                <Header :style="{background: '#fff', boxShadow: '0 2px 3px 2px rgba(0,0,0,.1)'}">
-                    <Avatar src="http://b-ssl.duitang.com/uploads/item/201812/07/20181207173003_zdddw.jpg" size="large" style="position:absolute; right: 40px; top:10px"/>
-                </Header>
-                <Content :style="{padding: '0 16px 16px'}">
-                    <Breadcrumb :style="{margin: '16px 0'}">
-                        <BreadcrumbItem>Home</BreadcrumbItem>
-                        <BreadcrumbItem>Components</BreadcrumbItem>
-                        <BreadcrumbItem>Layout</BreadcrumbItem>
-                    </Breadcrumb>
-                    <Card>
-                        <div style="height: 550px">Content</div>
-                    </Card>
-                </Content>
-                <Footer></Footer>
-            </Layout>
+    <div id="home">
+        <Layout class="r-layout">
+            <Card shadow class="r-header-card">
+            <Header >
+
+                <img src="./assets/logo2.png" style="float: left; margin-left: 20px; cursor: pointer;" @click="jumpHome"/>
+                <div class="r-container" style="width: 80%; margin-left: 20%;">
+
+                        <div class="header-login"  v-if="loginShow">
+                            <Dropdown>
+                                <Avatar size="large" :style="{background: color}">{{name}}</Avatar>
+                                    <Icon type="md-exit"  style="font-size: 24px; cursor: pointer;margin-left: 25px;" @click="exitSystem"/>
+                            </Dropdown>
+                        </div>
+
+                        <div v-else class="header-login" style="float:right">
+
+                                <Avatar src="http://pic.51yuansu.com/pic3/cover/00/94/68/58dcd6dae081f_610.jpg"  />
+
+                            <Button type="text" ghost style="color:#000; font-size: 14px;" @click="Login">登&nbsp;录</Button>
+                        </div>
+
+                </div>
+
+
+                    <Menu mode="horizontal"
+                          theme="light"
+                          :active-name="activeMenuIndex"
+                          style="float: right;margin-right: 50px;"
+                          >
+                        <MenuItem name="1" to="/home/">
+                            <Icon type="md-home" />
+                            首页
+                        </MenuItem>
+                            <MenuItem name="2" to="/home/personal">
+                                <Icon type="ios-people" />
+                                个人中心
+                            </MenuItem>
+                    </Menu>
+            </Header>
+            </Card>
+            <Content style="min-height: 820px; margin-top: 10px;">
+                <router-view></router-view>
+            </Content>
+            <Footer style="background: #515a6e; text-align: center; height: 64px; color: #fff; ">
+                <p>© 2019 山西省长治市长治学院</p>
+            </Footer>
         </Layout>
     </div>
 </template>
 <script>
+
+    const ColorList = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae','#00CCCC','#9999FF','#CC6699','#FF9966','#FF99FF'];
+    import First from './views/first/First'
     export default {
-        data () {
+        name: 'home',
+        data() {
             return {
-                isCollapsed: false
+                loginShow:true,
+                name:'',
+                color:'#ffbf00',
             };
         },
-        computed: {
-            menuitemClasses: function () {
-                return [
-                    'menu-item',
-                    this.isCollapsed ? 'collapsed-menu' : ''
-                ]
+        components:{
+            First
+        },
+        computed:{
+            activeMenuIndex(){
+                console.log(this.$route)
+                return this.$route.meta.fatherId
+            }
+        },
+        created(){
+            this.color = ColorList[Math.floor((Math.random()*9)+1)]
+            this.name = sessionStorage.getItem("name");
+            if(!sessionStorage.getItem("login")){
+                    this.loginShow = false;
+            }
+        },
+        methods:{
+            exitSystem(){
+                sessionStorage.removeItem("login");
+                this.$router.push("/login")
+            },
+            Login(){
+                this.$router.push("/login")
+            },
+            jumpHome(){
+                this.$router.push('/home')
             }
         }
     }
 </script>
 
-<style scoped>
-    .layout-con{
-        height: 100%;
+
+<style>
+    .r-header-card .ivu-card-body{
+        padding: 5px;
+    }
+
+    .r-layout .ivu-layout-header{
+        background: #fff;
+    }
+    .r-container{
+        position:relative;
         width: 100%;
     }
-    .menu-item span{
-        display: inline-block;
-        overflow: hidden;
-        width: 69px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        vertical-align: bottom;
-        transition: width .2s ease .2s;
+
+    .header-login{
+        float:right;
     }
-    .menu-item i{
-        transform: translateX(0px);
-        transition: font-size .2s ease, transform .2s ease;
-        vertical-align: middle;
-        font-size: 16px;
+    #home .ivu-badge-count{
+        position: absolute;
+        top:0px
     }
-    .collapsed-menu span{
-        width: 0px;
-        transition: width .2s ease;
-    }
-    .collapsed-menu i{
-        transform: translateX(5px);
-        transition: font-size .2s ease .2s, transform .2s ease .2s;
-        vertical-align: middle;
-        font-size: 22px;
+
+    #home .ivu-tabs-nav{
+        float: right;
     }
 </style>
+
