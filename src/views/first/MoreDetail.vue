@@ -37,7 +37,7 @@
             <p slot="title">
                 <Icon type="md-build"></Icon>
                 维修订单详情
-                <Icon type="md-close" style="float: right; font-size: 20px" @click="closeDetail"></Icon>
+                <Icon type="md-close" style="float: right; font-size: 20px;cursor: pointer;" @click="closeDetail"></Icon>
             </p>
 
             <Row style="margin-top: 20px; margin-bottom: 15px; margin-left: 20%;">
@@ -69,7 +69,7 @@
                                 <div style="width: 170px; height: 250px; float: left;">
                                     <img :src="'/api/image/' +tableItem.imageUrl"  style="width: 100%; height:100%;box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.3); "/>
                                 </div>
-                                <div class="demo-upload-list-cover" style="float: right;">
+                                <div style="float: right;">
                                     <Icon type="ios-expand" @click="handleView()" style="font-size: 20px;">查看</Icon>
                                 </div>
 

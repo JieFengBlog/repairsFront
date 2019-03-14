@@ -130,7 +130,7 @@
             },
             adminCenter(name){
                 if(name == "0"){
-                    this.sessionStorage.removeItem("adminLoginStatus");
+                    this.sessionStorage.setItem("adminLoginStatus",null);
                     this.$router.push("/adminLogin");
                 }else{
                     this.modal1 = true;

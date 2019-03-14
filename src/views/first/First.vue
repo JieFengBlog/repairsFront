@@ -11,7 +11,7 @@
                                 <Card class="repair-order-title">
                                     <div slot="title">
                                         <Icon type="ios-time-outline" style="font-size: 20px; color: #33CCCC;"/>
-                                        <Time :time="new Date().getTime() - calculateTime(item.createTime)" slot="title" />
+                                        <Time :time="tableTime(item.createTime)" slot="title" />
                                     </div>
                                     <a @click="showMore" slot="extra"  style="color: #33CCCC;">
                                         <Icon type="ios-loop-strong" ></Icon>
@@ -48,7 +48,7 @@
                             <Layout>
                                 <Header style="text-align: center;"><h2>{{title}}</h2></Header>
                                 <div style=" background: #fff;">
-                                    <h5 style="margin-left: 340px;">{{noticeName}}</h5>
+                                    <h5 style="margin-left: 390px;">{{noticeName}}</h5>
                                 </div>
                                 <Divider style="background:#FFF; margin:0px 0px"/>
                                 <Content style="background: #fff;">
@@ -108,6 +108,7 @@
         name: "First",
         data(){
             return{
+                tableTimeData:'',
                 title:'',
                 content:'',
                 noticeName:'',
@@ -207,6 +208,9 @@
                     return false;
                 }
 
+            },
+            tableTime:function (item) {
+                return new Date().getTime() - this.calculateTime(item)
             }
         }
     }

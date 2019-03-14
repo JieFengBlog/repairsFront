@@ -22,13 +22,12 @@
                     <span>{{new Date(row.endTime).toLocaleString()}}</span>
                 </template>
                 <template slot-scope="{row}" slot="assessment">
-                    <Rate show-text allow-half disabled v-model="row.assessment" v-if="row.assessment == 0? false:true">
+                    <Rate show-text allow-half disabled v-model="row.assessment" v-if="row.assessment == null? false:true">
                         <span style="color: #f5a623">{{ row.assessment }}</span>
                     </Rate>
                     <div v-else>
                         <span>还没有评价</span><Button type="primary" ghost @click="assessmentVisible(row)" size="small" style="margin-left: 20px;" >评价</Button>
                     </div>
-
                 </template>
             </Table>
             <Page :total="otherPeopleTable.length"
@@ -55,11 +54,16 @@
                 <template slot-scope="{ row }" slot="createTime">
                     <span>{{new Date(row.createTime).toLocaleString()}}</span>
                 </template>
+                <template slot-scope="{ row }" slot="endTime">
+                    <span>{{new Date(row.endTime).toLocaleString()}}</span>
+                </template>
                 <template slot-scope="{row}" slot="assessment">
-                    <Rate show-text allow-half disabled  v-model="row.assessment" v-if="row.value <= 0? false:true">
+                    <Rate show-text allow-half disabled v-model="row.assessment" v-if="row.assessment == null? false:true">
                         <span style="color: #f5a623">{{ row.assessment }}</span>
                     </Rate>
-
+                    <div v-else>
+                        <span>还没有评价</span>
+                    </div>
                 </template>
             </Table>
             <Page :total=" repairTableData.length"
@@ -155,7 +159,7 @@
                         align: 'center',
                         title: '结束时间',
                         width: 170,
-                        key: 'endTime'
+                        slot: 'endTime'
 
                     },
                     {
