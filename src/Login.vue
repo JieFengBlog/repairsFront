@@ -1,5 +1,8 @@
 <template>
     <div id="login">
+        <div style="z-index: 3; position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.5); ">
+
+        </div>
             <i-form ref="formLogin" :model="formLogin" :rules="formLoginRules"  class="card-box">
                 <Form-item class="formLogin-title">
                     <h3>系统登录</h3>
@@ -156,10 +159,9 @@
         border-radius: 5px;
         -moz-border-radius: 5px;
         background-clip: padding-box;
-        margin-bottom: 20px;
         background-color: #F9FAFC;
-        margin: 300px auto;
         width: 400px;
+        z-index: 999;
         box-shadow:  rgba(255,255,255,0.8) 0px  0px 15px;
         /* border: 2px solid #8492A6;*/
     }
@@ -185,6 +187,23 @@
         width: 100%;
         height: 100%;
         background-size:cover;
-        background: #666699;
+        background: url("./assets/bg.jpg");
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
     }
+    #login:after{
+        content: "";
+        width:100%;
+        height:100%;
+        position: absolute;
+        left:0;
+        top:0;
+        background: inherit;
+        filter: blur(5px);
+        z-index: 2;
+    }
+
 </style>

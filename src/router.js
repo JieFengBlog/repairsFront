@@ -15,6 +15,8 @@ import Teacher from "@/views/admin/Teacher";
 import Manager from "@/views/admin/Manager";
 import RepairPeople from "@/views/admin/RepairPeople";
 import Notice from "@/views/admin/Notice";
+import HistoryAdmin from "@/views/admin/HistoryAdmin";
+import ChartsAdmin from "@/views/admin/ChartsAdmin";
 
 Vue.use(Router)
 
@@ -130,7 +132,28 @@ export default new Router({
                 icon:'md-build'
               }
         },
-
+        {
+          path:"historyAdmin",
+          name:"historyAdmin",
+          component:HistoryAdmin,
+          meta:
+              {
+                index:'6',
+                title:'历史订单',
+                icon:'ios-time'
+              }
+        },
+        {
+          path:"chartsAdmin",
+          name:"chartsAdmin",
+          component:ChartsAdmin,
+          meta:
+              {
+                index:'7',
+                title:'图表统计',
+                icon:'ios-stats'
+              }
+        },
       ]
     }
   ],

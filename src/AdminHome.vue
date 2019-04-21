@@ -24,6 +24,14 @@
                             <Icon type="md-build" />
                             <span>维修人员管理</span>
                         </MenuItem>
+                        <MenuItem name="6" to="/adminHome/historyAdmin">
+                            <Icon type="ios-time" />
+                            <span>维修历史</span>
+                        </MenuItem>
+                        <MenuItem name="7" to="/adminHome/chartsAdmin">
+                            <Icon type="md-stats" />
+                            <span>图表统计</span>
+                        </MenuItem>
                     </Menu>
                 </Sider>
                 <Layout>
@@ -46,7 +54,7 @@
                     <Card style="margin-top: 10px ;box-shadow:0 1px 6px rgba(0, 0, 0, 0.1)">
                         <Breadcrumb>
                             <BreadcrumbItem v-for="(item,index) in breadList " :to="item.path" :key="index">
-                                <Icon :type="item.meta.icon"></Icon>{{item.meta.title}}
+                                <Icon :type="item.meta.icon"></Icon>&nbsp;{{item.meta.title}}
                             </BreadcrumbItem>
                         </Breadcrumb>
                     </Card>

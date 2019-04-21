@@ -67,16 +67,29 @@
         </Col>
 
 
-
-
         <Col span="11" style="margin-left: 50px;">
             <Card  style="box-shadow:0 1px 6px rgba(0, 0, 0, 0.2)">
                 <p slot="title" >填写报修单</p>
                 <Form :model="repairTable" :label-width="150">
                     <FormItem label="报修地点">
-                        <Input v-model="repairTable.address" placeholder="需要报修的机器在哪里"></Input>
+
+                        <Row >
+                            <Col span="8">
+                                <Select v-model="model1" >
+                                    <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                </Select>
+                            </Col>
+                            <Col span="12">
+                                <Input v-model="repairTable.address" placeholder="具体地点(如三楼302教室5号机)"></Input>
+                            </Col>
+                        </Row>
                     </FormItem>
-                    <FormItem label="具体说明">
+                    <FormItem label="损坏类型">
+                        <Select v-model="repairTable.destory_type" >
+                            <Option v-for="item in typeList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem label="补充说明">
                         <Input v-model="repairTable.desc" placeholder="发生什么故障" type="textarea"></Input>
                     </FormItem>
                     <FormItem label="上传具体的图片(可选)">
@@ -108,6 +121,35 @@
         name: "First",
         data(){
             return{
+                typeList:[],
+                cityList: [
+                    {
+                        value: '1',
+                        label: '一号楼'
+                    },
+                    {
+                        value: '2',
+                        label: '二号楼'
+                    },
+                    {
+                        value: '4',
+                        label: '四号楼'
+                    },
+                    {
+                        value: '5',
+                        label: '图书馆'
+                    },
+                    {
+                        value: '6',
+                        label: '系办公楼'
+                    },
+                    {
+                        value: '7',
+                        label: '其他'
+                    }
+                ],
+                model1: '',
+                repairType:'',
                 tableTimeData:'',
                 title:'',
                 content:'',
@@ -128,6 +170,7 @@
                 firstTable: [],
                 list1: [],
                 repairTable:{
+                    destory_type:null,
                     address:'',
                     desc:'',
                 }
@@ -138,8 +181,17 @@
             this.getFirstTable();
             this.spinShow = false;
             this.getFirstSystemNotice();
+            this.getAllType();
         },
         methods:{
+            getAllType(){
+              this.$axios({
+                  method:'get',
+                  url:'/api/type/getAllType'
+              }).then(response=>{
+                  this.typeList = response.data
+              })
+            },
             showSystemNotice(item){
                 this.title = item.title;
                 this.content = item.content;
