@@ -4,7 +4,7 @@
             <Card style="box-shadow:0 1px 6px rgba(0, 0, 0, 0.2)">
                 <p slot="title">公告信息</p>
                 <Tabs value="name1">
-                    <TabPane label="维修公告" name="name1">
+                    <TabPane label="维修公告"  name="name1">
 
                         <Row :gutter="30" >
                             <Col span="12" v-for="(item,index) in firstTable" :key="index" style="margin-bottom: 40px;">
@@ -34,7 +34,7 @@
                             <Button type="primary" style="float:right; margin-right: 20px;" @click="showMore">查看更多</Button>
                         </Row>
                     </TabPane>
-                    <TabPane label="系统公告" name="name2" >
+                    <TabPane label="系统公告" name="name2" style="height: 365px;" >
                         <Layout style="position: absolute;height: 100%; width: 100%;">
                             <Sider hide-trigger width="200" style="background: #fff; overflow:auto">
 
@@ -124,27 +124,27 @@
                 typeList:[],
                 cityList: [
                     {
-                        value: '1',
+                        value: '一号楼',
                         label: '一号楼'
                     },
                     {
-                        value: '2',
+                        value: '二号楼',
                         label: '二号楼'
                     },
                     {
-                        value: '4',
+                        value: '四号楼',
                         label: '四号楼'
                     },
                     {
-                        value: '5',
+                        value: '图书馆',
                         label: '图书馆'
                     },
                     {
-                        value: '6',
+                        value: '系办公楼',
                         label: '系办公楼'
                     },
                     {
-                        value: '7',
+                        value: '',
                         label: '其他'
                     }
                 ],
@@ -224,6 +224,7 @@
                     this.$Message.error('表单中有内容为空,提交失败');
                     return;
                 }
+                this.repairTable.address = this.model1 + this.repairTable.address;
               this.$axios({
                   method:"post",
                   url:"/api/first/insertRepairTable",
@@ -233,6 +234,11 @@
               }).then(response=>{
                   if(response.data.success){
                       this.getFirstTable();
+                      this.model1 = '';
+                      this.repairType = null;
+                      this.repairTable.destory_type = null;
+                      this.repairTable.address = '';
+                      this.repairTable.desc = '';
                       this.$Message.success('提交成功');
                   }else{
                       this.$Message.error('提交失败');

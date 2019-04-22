@@ -21,7 +21,7 @@
         <Button type="success" style="margin-bottom: 10px;" @click="addStudent">添加公告信息</Button>
 
 
-        <Table :data="managerData" :columns="studentColumns" stripe border :loading="loading">
+        <Table :data="managerData.slice((currentPage-1)*currentSize,currentPage*currentSize)" :columns="studentColumns" stripe border :loading="loading">
             <template slot-scope="{row}" slot="createTime">
                     {{new Date(row.createTime).toLocaleString()}}
             </template>
@@ -33,7 +33,15 @@
         </Table>
         <div style="margin: 10px;overflow: hidden">
             <div style="float: right;">
-                <Page :total="managerData.length" :current="1" @on-change=""></Page>
+                <Page :total="managerData.length"
+                      :current="1"
+                      show-elevator
+                      show-sizer
+                      :page-size="currentSize"
+                      @on-page-size-change="handleSizeChange"
+                      @on-change="handleCurrentChange"
+                      :page-size-opts="[10, 20, 30, 40]"
+                ></Page>
             </div>
         </div>
     </div>
@@ -44,6 +52,8 @@
     export default {
         data () {
             return {
+                currentSize:10,
+                currentPage:1,
                 formType:1,//0 添加 1 编辑
                 formTitle:'',
                 modalVisible:false,
@@ -92,6 +102,12 @@
             }
         },
         methods: {
+            handleSizeChange(val) {
+                this.currentSize = val
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val;
+            },
             getAllStudent(){
                 this.loading = true;
                 this.$axios({
